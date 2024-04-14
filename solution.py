@@ -10,9 +10,6 @@ df = duckdb.query("""
                             val
                             --dummy key to create groups for every 3 consecutive records
                             ,cast(ceil(row_number() over(order by 1) / 3) as int ) as doc_id 
-                            ,a
-                            ,b 
-                            ,c
                             -- transition states origination from a
                             ,CASE WHEN val = 'a' THEN current_state_a ELSE 0 END as a_a
                             ,CASE WHEN val = 'a' THEN current_state_b ELSE 0 END as a_b                    
@@ -27,7 +24,7 @@ df = duckdb.query("""
                             ,CASE WHEN val = 'c' THEN current_state_c ELSE 0 END as c_c                    
                             ,CASE WHEN val = 'c' THEN current_state_b ELSE 0 END as c_b
                             ,CASE WHEN val = 'c' THEN current_state_a ELSE 0 END as c_a
-                        FROM source
+                        FROM df
                     )
                     GROUP BY doc_id
                     ORDER BY doc_id asc
